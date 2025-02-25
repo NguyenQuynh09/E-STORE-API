@@ -1,0 +1,21 @@
+const express=require("express")
+
+const cors=require("cors")
+
+const app=express()
+
+
+app.use(express.json())
+app.use(cors())
+
+app.get("/",(req,res)=>{
+    return res.status(200).send({message : "Chào mừng bạn đến với api - node",status:true})
+})
+
+const authRouters=require("./routes/auth.route.js")
+app.use("/auth",authRouters);
+
+const userRouters=require("./routes/user.route.js");
+app.use("/api/users",userRouters);
+
+module.exports=app;
