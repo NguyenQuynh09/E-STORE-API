@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { default: paymentLink } = require('razorpay/dist/types/paymentLink');
 const { Schema } = mongoose;
 
 const orderSchema = new Schema({

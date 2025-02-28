@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
-const { schema } = mongoose;
+const { Schema } = mongoose;
 
-const ratingSchema = new SChema({
+const ratingSchema = new Schema({
     user: {
-        type: mongoose.SChema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'users',
         required: true,
     },
     product: {
-        type: mongoose.SChema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'products',
         required: true,
     },
