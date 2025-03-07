@@ -10,6 +10,7 @@ async function createProduct(reqData){
             name:reqData.topLevelCategory,
             level:1
         })
+        await topLevel.save()
     }
 
     let secondLevel = await Category.findOne({
@@ -22,6 +23,7 @@ async function createProduct(reqData){
             parentCategory:topLevel._id,
             level:2
         })
+        await secondLevel.save()
     }
     let thirdLevel = await Category.findOne({
         name:reqData.thirdLevelCategory,
@@ -34,6 +36,7 @@ async function createProduct(reqData){
             parentCategory:secondLevel._id,
             level:3,
         })
+        await thirdLevel.save()
     }
     const product = new Product({
         title:reqData.title,

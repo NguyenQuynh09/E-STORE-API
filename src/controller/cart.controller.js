@@ -9,15 +9,19 @@ const findUserCart = async(req,res)=>{
         return res.status(500).send({error:error.message})
     }
 }
-const addItemToCart = async(req,res)=>{
-    const user = req.user;
+const addItemToCart = async (req, res) => {
     try {
-        const cartItem = await cartService.findUserCart(user.id,req.body);
-        return res.status(200).send(cartItem);
+        const userId = req.user._id;
+        console.log("User ID:", userId);
+        console.log("Request body:", req.body);
+
+        const response = await cartService.addCartItem(userId, req.body);
+        return res.status(200).send(response);
     } catch (error) {
-        return res.status(500).send({error:error.message})
+        console.error("Error adding item to cart:", error.message);
+        return res.status(500).send({ error: error.message });
     }
-}
+};
 module.exports={
     addItemToCart,
     findUserCart

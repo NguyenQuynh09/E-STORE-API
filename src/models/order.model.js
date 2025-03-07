@@ -45,7 +45,7 @@ const orderSchema = new Schema({
         type: Number,
         required: true,
     },
-    discounte:{
+    discounted:{
         type: Number,
         required: true,
     },

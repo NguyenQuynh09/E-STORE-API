@@ -27,7 +27,7 @@ const createUser = async (userData) => {
 const getUserById = async (userId) => {
   try {
     const user = await User.findById(userId)
-    // .populate("address");
+ 
     if (!user) {
       throw new Error(" Không thể tìm thấy id : ", userId);
     }

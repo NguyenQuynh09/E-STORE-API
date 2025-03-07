@@ -1,46 +1,45 @@
 const cartService = require("../services/cart.service.js")
 const Address = require("../models/address.model.js");
 const Order = require("../models/order.model.js")
-async function createOrder(user, shippAddress) {
-    let address;
+const orderItem =  require("../models/orderItem.js");
+async function createOrder(user, shipAddress) {
+    try {
+        let address;
+        if (shipAddress._id) {
+            address = await Address.findById(shipAddress._id);
+            if (!address) throw new Error("Invalid shipping address ID provided.");
+        } else {
+            address = new Address(shipAddress);
+            address.user = user;
+            await address.save();
 
-    if (shippAddress._id) {
-        let existAddress = await Address.findById(shippAddress._id);
-        address = existAddress;
+            user.address.push(address);
+            await user.save();
+        }
+
+        const cart = await cartService.findUserCart(user._id);
+        if (!cart || cart.cartItems.length === 0) {
+            throw new Error("Cart is empty. Cannot create an order.");
+        }
+
+        const orderItems = [];
+        const createdOrder = new Order({
+            user: user._id,
+            orderItems,
+            totalPrice: cart.totalPrice,
+            totalDiscountedPrice: cart.totalDiscountedPrice,
+            totalItem: cart.totalItem,
+            discounted: cart.discounted,
+            shippingAddress: address,
+        });
+
+        const savedOrder = await createdOrder.save();
+        return savedOrder;
+
+    } catch (error) {
+        console.error(error);
+        throw new Error(error.message);
     }
-    else {
-        address = new Address(shippAddress);
-        address.user = user;
-        await address.save();
-
-        user.addresses.push(address);
-        await user.save();
-    }
-    const cart = await cartService.findUserCart(user._id);
-    const orderItems = [];
-
-    for (const item of cart.cartItems) {
-        const orderItem = new orderItems({
-            price: item.price,
-            product: item.product,
-            quantity: item.quantity,
-
-            userId: item.userId,
-            discountedPrice: item.discountedPrice,
-        })
-        const createdOrderItem = await orderItem.save();
-        orderItems.push(createdOrderItem)
-    }
-    const createdOrder = new Order({
-        user,
-        orderItems,
-        totalPrice: cart.totalPrice,
-        totalDiscountedPrice: cart.totalDiscountedPrice,
-        discounte: cart.discounte,
-        shippAddress: address,
-    })
-    const savedOrder = await createOrder.save();
-    return savedOrder;
 }
 
 async function placeOrder(orderId) {
@@ -117,5 +116,6 @@ module.exports = {
     findOrderById, 
     usersOrderHistory, 
     getAllOrders, 
-    deleteOrder
+    deleteOrder,
+    orderItem
 }

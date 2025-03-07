@@ -10,7 +10,9 @@ const updateCartItem = async(req,res)=>{
     }
 }
 const removeCartItem = async(req,res)=>{
-    const user =req.user
+    const user = await req.user 
+
+    console.log("cart item id", req.params.id)
     try {
         await cartItemService.removeCartItem(user._id,req.params.id);
         return res.status(200).send({message:"Xóa thành phần thành công"});
